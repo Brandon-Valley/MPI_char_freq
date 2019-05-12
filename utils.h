@@ -102,7 +102,6 @@ vector<char> build_master_char_vec(const vector<string> txt_filenames)
 
 	for (string filename : txt_filenames)
 	{
-//		cout << filename << endl;
 		vector<char> chars_from_file = get_chars_from_txt_file(filename);
 
 		//add the chars from the txt file that you just read to the master char vec
