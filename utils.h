@@ -128,6 +128,25 @@ void write_int_to_txt_file (const int i, const string file_path)
 }
 
 
+int read_int_from_txt_file(const string file_path)
+{
+	vector<string> int_str_vec = {};
+
+	std::string item_name;
+	std::ifstream nameFileout;
+
+	nameFileout.open(file_path);
+//	string int_str = getline(nameFileout, item_name);
+	while (std::getline(nameFileout, item_name))
+	{
+	    int_str_vec.push_back(item_name);
+	}
+//	cout << int_str_vec << endl;//```````````````````````````````````````````````````````````````````
+	nameFileout.close();
+
+	return stoi(int_str_vec[0]);
+}
+
 
 
 

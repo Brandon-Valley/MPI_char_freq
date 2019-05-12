@@ -19,6 +19,7 @@ using namespace std;
 //can we assume all the files in files.dat will exist?
 //can we assume the txt files will not be empty?
 //can we assume files.dat will never be empty?
+//need to wory about going over size of int?
 
 
 // dont forget to check for mem leaks !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -84,23 +85,24 @@ int main(int argc, char **argv)
 //            printf("%d ", globaldata[i]);
 //        printf("\n");
 
-        cout << "real globadata size: " << sizeof(globaldata) << endl;
+//        cout << "real globadata size: " << sizeof(globaldata) << endl;
 
         write_int_to_txt_file(globaldata_size, GLOBAL_DATA_SIZE_TXT_FILE_PATH);
     }
+    int g_data_size = read_int_from_txt_file(GLOBAL_DATA_SIZE_TXT_FILE_PATH);
 
     cout << "outside if:  globaldata_size: " << globaldata_size << endl;
 
-    int num_chars_per_mpi_inst = sizeof(globaldata) / sizeof(*globaldata) / size;
+    int num_chars_per_mpi_inst = g_data_size / size;
     cout << "num_chars_per_mpi_inst:  " << num_chars_per_mpi_inst << endl;
 
     cout << "about to do scatter" << endl;
 
-    MPI_Scatter(globaldata, num_chars_per_mpi_inst, MPI_INT, localdata, num_chars_per_mpi_inst, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(globaldata, num_chars_per_mpi_inst, MPI_CHAR, localdata, num_chars_per_mpi_inst, MPI_CHAR, 0, MPI_COMM_WORLD);
 
 //    printf("Processor %d has data %d\n", rank, localdata);
 
-    for (int i=0; i<num_chars_per_mpi_inst; i++)
+    for (int i=0; i<5; i++)
 //        printf("Processor %d has data %d\n", rank, localdata[i]);
     	cout << "Processor " << rank << " has data " << localdata[i] << endl;
 //
