@@ -5,68 +5,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
-//#include <string>
+#include <string>
 
 #include <fstream>
+
+#include "utils.h"
 
 using namespace std;
 
 
-
-
-
-std::ostream & operator << (std::ostream &out, vector<char> &vec)
-{
-    out << "[";
-
-    for(int i = 0; i < vec.size(); i++)
-    {
-    	if ( i < vec.size() - 1 )
-    		out << "\'" << vec.at(i) << "\'" << ", ";
-    	else
-    		out << "\'" << vec.at(i) << "\'";
-    }
-    out << "]";
-
-    return out;
-}
-
-
-
-
-
-vector<char> get_chars_from_txt_file(const string txt_file_path)
-{
-	vector<char> txt_file_chars = {};
-
-	char ch;
-	fstream fin("test.txt", fstream::in);
-	while (fin >> noskipws >> ch)
-	{
-		if (ch != ' ' and ch != '\n')
-			txt_file_chars.push_back(ch);
-	}
-
-	return txt_file_chars;
-}
-
-
-//void readCharFile(string &filePath) {
-//    ifstream in(filePath);
-//    char c;
-//
-//    if(in.is_open()) {
-//        while(in.good()) {
-//            in.get(c);
-//            // Play with the data
-//        }
-//    }
-//
-//    if(!in.eof() && in.fail())
-//        cout << "error reading " << filePath << endl;
-//
-//    in.close();
-//}
+const string FILENAMES_FILE_PATH = "data/files.dat";
 
 
 int main(int argc, char **argv)
@@ -76,6 +24,8 @@ int main(int argc, char **argv)
 	vector<char> txt_file_chars = get_chars_from_txt_file("test.txt");
 
 	cout << txt_file_chars << endl;
+
+	vector<string> txt_filenames = get_txt_filenames(FILENAMES_FILE_PATH);
 
 //
 //
