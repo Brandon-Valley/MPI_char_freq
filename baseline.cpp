@@ -43,8 +43,8 @@ vector<char> get_chars_from_txt_file(const string txt_file_path)
 	fstream fin("test.txt", fstream::in);
 	while (fin >> noskipws >> ch)
 	{
-//	    cout << ch; // Or whatever
-		txt_file_chars.push_back(ch);
+		if (ch != ' ' and ch != '\n')
+			txt_file_chars.push_back(ch);
 	}
 
 	return txt_file_chars;
