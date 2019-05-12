@@ -25,12 +25,15 @@ using namespace std;
 // dont forget to make it not case sensitive !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 const string FILENAMES_FILE_PATH = "data/files.dat";
+const string GLOBAL_DATA_SIZE_TXT_FILE_PATH = "globaldata_size.txt";
 
 
 int main(int argc, char **argv)
 {
+//	int a[3] = {1,2,3};
+//	cout << sizeof(a) / sizeof(*a) << endl;
 
-
+	int globaldata_size = 0;
 	int *global_sum = new int[26];
 	int *local_sum = new int[26];
 
@@ -40,7 +43,7 @@ int main(int argc, char **argv)
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    cout << "size: " << size << endl;
+//    cout << "size: " << size << endl;
 
     char *globaldata=NULL;
     char *localdata=NULL;
@@ -57,6 +60,7 @@ int main(int argc, char **argv)
     	cout << "just built mcv, mcv.size: " << master_char_vec.size() << endl;
 
     	int globaldata_size = find_next_div_size(master_char_vec.size(), size);
+    	cout << "globaldata_size: " << globaldata_size << endl;
 
 
     	// create and file globaldata, if globaldata is larger than master_char_vec, add 0's to the end to fill
@@ -67,17 +71,27 @@ int main(int argc, char **argv)
         		globaldata[i] = master_char_vec[i];
         	else
         		globaldata[i] = '0';
+//        	cout << i << ":  " << globaldata[i] << endl;
         }
 
 
-        printf("Processor %d has data: ", rank);
-        for (int i=0; i<size; i++)
-            printf("%d ", globaldata[i]);
-        printf("\n");
+
+
+//        printf("Processor %d has all the data: ", rank);
+        cout << "Processor " << rank << " has all the data" << endl;
+//        printf("Processor %d has data: ", rank);
+//        for (int i=0; i<size; i++)
+//            printf("%d ", globaldata[i]);
+//        printf("\n");
+
+        cout << "real globadata size: " << sizeof(globaldata) << endl;
+
+        write_int_to_txt_file(globaldata_size, GLOBAL_DATA_SIZE_TXT_FILE_PATH);
     }
 
+    cout << "outside if:  globaldata_size: " << globaldata_size << endl;
 
-    int num_chars_per_mpi_inst = (sizeof(globaldata)/sizeof(*globaldata)) / size;
+    int num_chars_per_mpi_inst = sizeof(globaldata) / sizeof(*globaldata) / size;
     cout << "num_chars_per_mpi_inst:  " << num_chars_per_mpi_inst << endl;
 
     cout << "about to do scatter" << endl;
@@ -87,7 +101,8 @@ int main(int argc, char **argv)
 //    printf("Processor %d has data %d\n", rank, localdata);
 
     for (int i=0; i<num_chars_per_mpi_inst; i++)
-        printf("Processor %d has data %d\n", rank, localdata[i]);
+//        printf("Processor %d has data %d\n", rank, localdata[i]);
+    	cout << "Processor " << rank << " has data " << localdata[i] << endl;
 //
 ////    localdata *= 2;
 ////    printf("Processor %d doubling the data, now has %d\n", rank, localdata);

@@ -119,7 +119,13 @@ vector<char> build_master_char_vec(const vector<string> txt_filenames)
 }
 
 
-
+void write_int_to_txt_file (const int i, const string file_path)
+{
+  ofstream myfile;
+  myfile.open (file_path);
+  myfile << to_string(i);
+  myfile.close();
+}
 
 
 
