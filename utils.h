@@ -14,7 +14,13 @@
 
 using namespace std;
 
-
+// find the next highest vec size that will divide the number of mpi processes evenly
+int find_next_div_size(int original_vec_size, const int num_mpi_processes)
+{
+	while(original_vec_size % num_mpi_processes != 0)
+		original_vec_size += 1;
+	return original_vec_size;
+}
 
 
 
@@ -64,7 +70,7 @@ vector<char> get_chars_from_txt_file(const string txt_file_path)
 	vector<char> txt_file_chars = {};
 
 	char ch;
-	fstream fin("test.txt", fstream::in);
+	fstream fin(txt_file_path, fstream::in);
 	while (fin >> noskipws >> ch)
 	{
 		if (ch != ' ' and ch != '\n')
@@ -102,7 +108,7 @@ vector<char> build_master_char_vec(const vector<string> txt_filenames)
 
 	for (string filename : txt_filenames)
 	{
-		vector<char> chars_from_file = get_chars_from_txt_file(filename);
+		vector<char> chars_from_file = get_chars_from_txt_file("data/" + filename);
 
 		//add the chars from the txt file that you just read to the master char vec
 		master_char_vec.insert( master_char_vec.end(), chars_from_file.begin(), chars_from_file.end() );

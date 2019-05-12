@@ -9,6 +9,8 @@
 
 #include <fstream>
 
+#include <array>
+
 #include "utils.h"
 
 using namespace std;
@@ -19,25 +21,20 @@ using namespace std;
 //can we assume files.dat will never be empty?
 
 
-
-
+// dont forget to check for mem leaks !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// dont forget to make it not case sensitive !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 const string FILENAMES_FILE_PATH = "data/files.dat";
 
 
 int main(int argc, char **argv)
 {
-	//read in the filenames to be read
-	vector<string> txt_filenames = get_txt_filenames(FILENAMES_FILE_PATH);
-	cout << "txt_filenames: " << txt_filenames << endl;
-
-	//read the chars from each file and add them all to one big vector
-	vector<char> master_char_vec = build_master_char_vec(txt_filenames);
-	cout << "mcv: " << master_char_vec << endl;
 
 
+	int *global_sum = new int[26];
+	int *local_sum = new int[26];
 
-    int size, rank;
+    int size, rank; //size = # of mpi processes
 
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -45,41 +42,67 @@ int main(int argc, char **argv)
 
     cout << "size: " << size << endl;
 
-    int *globaldata=NULL;
-    int *localdata=NULL;
-    localdata =  new int[5];
+    char *globaldata=NULL;
+    char *localdata=NULL;
+    localdata =  new char[5];
 
     if (rank == 0) {
-        globaldata = new int[10];//(size * sizeof(int) );
-        for (int i=0; i<10; i++)
-            globaldata[i] = i;
+    	cout << "\n\n\n\n" << endl;
+    	//read in the filenames to be read
+    	vector<string> txt_filenames = get_txt_filenames(FILENAMES_FILE_PATH);
+    	cout << "txt_filenames: " << txt_filenames << endl;
+
+    	//read the chars from each file and add them all to one big vector
+    	vector<char> master_char_vec = build_master_char_vec(txt_filenames);
+    	cout << "just built mcv, mcv.size: " << master_char_vec.size() << endl;
+
+    	int globaldata_size = find_next_div_size(master_char_vec.size(), size);
+
+
+    	// create and file globaldata, if globaldata is larger than master_char_vec, add 0's to the end to fill
+        globaldata = new char[globaldata_size];
+        for (int i = 0 ; i < globaldata_size ; i++)
+        {
+        	if (i < master_char_vec.size())
+        		globaldata[i] = master_char_vec[i];
+        	else
+        		globaldata[i] = '0';
+        }
+
 
         printf("Processor %d has data: ", rank);
         for (int i=0; i<size; i++)
             printf("%d ", globaldata[i]);
         printf("\n");
     }
+
+
+    int num_chars_per_mpi_inst = (sizeof(globaldata)/sizeof(*globaldata)) / size;
+    cout << "num_chars_per_mpi_inst:  " << num_chars_per_mpi_inst << endl;
 
     cout << "about to do scatter" << endl;
 
-    MPI_Scatter(globaldata, 5, MPI_INT, localdata, 5, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(globaldata, num_chars_per_mpi_inst, MPI_INT, localdata, num_chars_per_mpi_inst, MPI_INT, 0, MPI_COMM_WORLD);
 
 //    printf("Processor %d has data %d\n", rank, localdata);
 
-    for (int i=0; i<5; i++)
+    for (int i=0; i<num_chars_per_mpi_inst; i++)
         printf("Processor %d has data %d\n", rank, localdata[i]);
-
-//    localdata *= 2;
-//    printf("Processor %d doubling the data, now has %d\n", rank, localdata);
-
-//    MPI_Gather(&localdata, 5, MPI_INT, globaldata, 5, MPI_INT, 0, MPI_COMM_WORLD);
-
-    if (rank == 0) {
-        printf("Processor %d has data: ", rank);
-        for (int i=0; i<size; i++)
-            printf("%d ", globaldata[i]);
-        printf("\n");
-    }
+//
+////    localdata *= 2;
+////    printf("Processor %d doubling the data, now has %d\n", rank, localdata);
+//
+////    MPI_Gather(&localdata, 5, MPI_INT, globaldata, 5, MPI_INT, 0, MPI_COMM_WORLD);
+//
+//
+//    MPI_Reduce(&local_sum, &global_sum, 26, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+//
+//    if (rank == 0) {
+//        printf("Processor %d has data: ", rank);
+//        for (int i=0; i<size; i++)
+//            printf("%d ", globaldata[i]);
+//        printf("\n");
+//    }
 
     if (rank == 0)
         delete(globaldata);
