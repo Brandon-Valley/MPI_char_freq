@@ -46,12 +46,13 @@ int main(int argc, char **argv)
     cout << "size: " << size << endl;
 
     int *globaldata=NULL;
-    int localdata;
+    int *localdata=NULL;
+    localdata =  new int[5];
 
     if (rank == 0) {
-        globaldata = new int[size];//(size * sizeof(int) );
-        for (int i=0; i<size; i++)
-            globaldata[i] = 2*i+1;
+        globaldata = new int[10];//(size * sizeof(int) );
+        for (int i=0; i<10; i++)
+            globaldata[i] = i;
 
         printf("Processor %d has data: ", rank);
         for (int i=0; i<size; i++)
@@ -61,13 +62,17 @@ int main(int argc, char **argv)
 
     cout << "about to do scatter" << endl;
 
-    MPI_Scatter(globaldata, 1, MPI_INT, &localdata, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(globaldata, 5, MPI_INT, localdata, 5, MPI_INT, 0, MPI_COMM_WORLD);
 
-    printf("Processor %d has data %d\n", rank, localdata);
-    localdata *= 2;
-    printf("Processor %d doubling the data, now has %d\n", rank, localdata);
+//    printf("Processor %d has data %d\n", rank, localdata);
 
-    MPI_Gather(&localdata, 1, MPI_INT, globaldata, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    for (int i=0; i<5; i++)
+        printf("Processor %d has data %d\n", rank, localdata[i]);
+
+//    localdata *= 2;
+//    printf("Processor %d doubling the data, now has %d\n", rank, localdata);
+
+//    MPI_Gather(&localdata, 5, MPI_INT, globaldata, 5, MPI_INT, 0, MPI_COMM_WORLD);
 
     if (rank == 0) {
         printf("Processor %d has data: ", rank);
