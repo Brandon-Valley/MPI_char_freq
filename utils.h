@@ -95,6 +95,35 @@ vector<string> get_txt_filenames(const string filename_file_path)
 }
 
 
+// read in the chars from all files and put them all in one big vec
+vector<char> build_master_char_vec(const vector<string> txt_filenames)
+{
+	vector<char> master_char_vec = {};
+
+	for (string filename : txt_filenames)
+	{
+//		cout << filename << endl;
+		vector<char> chars_from_file = get_chars_from_txt_file(filename);
+
+		//add the chars from the txt file that you just read to the master char vec
+		master_char_vec.insert( master_char_vec.end(), chars_from_file.begin(), chars_from_file.end() );
+
+	}
+
+	return master_char_vec;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

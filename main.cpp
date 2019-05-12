@@ -28,6 +28,12 @@ const string FILENAMES_FILE_PATH = "data/files.dat";
 int main(int argc, char **argv)
 {
 
+//	vector<char> i = {'a', 'b'};
+//	vector<char> r = {'c', 'd'};
+//	i.insert( i.end(), r.begin(), r.end() );
+//	cout << i << endl;
+
+
 //	readCharFile("test.txt");
 	vector<char> txt_file_chars = get_chars_from_txt_file("test.txt");
 
@@ -35,6 +41,14 @@ int main(int argc, char **argv)
 
 	vector<string> txt_filenames = get_txt_filenames(FILENAMES_FILE_PATH);
 	cout << "txt_filenames: " << txt_filenames << endl;
+
+
+	vector<char> master_char_vec = build_master_char_vec(txt_filenames);
+	cout << "mcv: " << master_char_vec << endl;
+
+
+
+
 //
 //
 //    int size, rank;
