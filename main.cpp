@@ -14,6 +14,14 @@
 using namespace std;
 
 
+//can we assume all the files in files.dat will exist?
+//can we assume the txt files will not be empty?
+//can we assume files.dat will never be empty?
+
+
+
+
+
 const string FILENAMES_FILE_PATH = "data/files.dat";
 
 
@@ -26,7 +34,7 @@ int main(int argc, char **argv)
 	cout << txt_file_chars << endl;
 
 	vector<string> txt_filenames = get_txt_filenames(FILENAMES_FILE_PATH);
-
+	cout << "txt_filenames: " << txt_filenames << endl;
 //
 //
 //    int size, rank;

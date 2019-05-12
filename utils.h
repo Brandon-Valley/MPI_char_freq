@@ -11,25 +11,44 @@
 
 #include <fstream>
 
+
 using namespace std;
 
 
 
 
 
+vector<string> split(string str, string token){
+    vector<string>result;
+    while(str.size()){
+        int index = str.find(token);
+        if(index!=string::npos){
+            result.push_back(str.substr(0,index));
+            str = str.substr(index+token.size());
+            if(str.size()==0)result.push_back(str);
+        }else{
+            result.push_back(str);
+            str = "";
+        }
+    }
+    return result;
+}
 
 
-// to print vec
-std::ostream & operator << (std::ostream &out, vector<char> &vec)
+
+
+
+template <typename T>
+std::ostream & operator << (std::ostream &out, vector<T> &vec)
 {
     out << "[";
 
     for(int i = 0; i < vec.size(); i++)
     {
     	if ( i < vec.size() - 1 )
-    		out << "\'" << vec.at(i) << "\'" << ", ";
+    		out << vec.at(i) << ", ";
     	else
-    		out << "\'" << vec.at(i) << "\'";
+    		out << vec.at(i);
     }
     out << "]";
 
@@ -58,16 +77,16 @@ vector<char> get_chars_from_txt_file(const string txt_file_path)
 
 vector<string> get_txt_filenames(const string filename_file_path)
 {
-	cout << "in get filenames" << endl;
 	vector<string> filenames = {};
 
 	std::string item_name;
 	std::ifstream nameFileout;
 
 	nameFileout.open(filename_file_path);
+//	string filenames_str = getline(nameFileout, item_name);
 	while (std::getline(nameFileout, item_name))
 	{
-	    std::cout << item_name;
+	    filenames.push_back(item_name);
 	}
 	nameFileout.close();
 
