@@ -148,6 +148,25 @@ int read_int_from_txt_file(const string file_path)
 }
 
 
+const string ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+void sum_chars(int ch_count_a[26], char chars_to_count_a[], const int num_chars_to_count)
+{
+	for (int i = 0 ; i < 26 ; i++)
+		ch_count_a[i] = 0;
+
+
+	for (int i = 0 ; i < num_chars_to_count ; i++)
+	{
+		char ch = chars_to_count_a[i];
+		if (isalpha(ch))
+		{
+			ch_count_a[ALPHABET.find(ch)] ++;
+		}
+
+//		ch_count_a[i] = i;
+	}
+}
+
 
 
 

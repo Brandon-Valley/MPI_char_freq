@@ -121,28 +121,32 @@ int main(int argc, char **argv)
 //
 //
 
+    sum_chars(local_sum, localdata, 5);
 
-//    for (int i = 0 ; i < 26 ; i++)
-//    {
-//    	local_sum[i] = i;
-//    }
-//
-//    MPI_Reduce(&local_sum, &global_sum, 26, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-//
-//    if (rank == 0) {
+
+	cout << "local_sum:  [ ";
+	for (int i = 0 ; i < 26 ; i++)
+	{
+		cout << local_sum[i] << " ";
+	}
+	cout << " ]" << endl;
+
+    MPI_Reduce(&local_sum, &global_sum, 26, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    if (rank == 0) {
 //        printf("Processor %d has data: ", rank);
 ////        for (int i=0; i<size; i++)
 ////            printf("%d ", globaldata[i]);
 //        printf("\n");
-//
+
 //        cout << "global_sum:  [  ";
 //        for (int i = 0 ; i < 26 ; i++)
 //        {
 //        	cout << global_sum[i] << "  ";
 //        }
 //        cout << "  ]" << endl;
-//
-//    }
+
+    }
 
     if (rank == 0)
         delete(globaldata);
