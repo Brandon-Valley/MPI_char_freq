@@ -74,7 +74,7 @@ vector<char> get_chars_from_txt_file(const string txt_file_path)
 	while (fin >> noskipws >> ch)
 	{
 		if (ch != ' ' and ch != '\n')
-			txt_file_chars.push_back(ch);
+			txt_file_chars.push_back(tolower(ch));
 	}
 
 	return txt_file_chars;

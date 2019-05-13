@@ -19,7 +19,7 @@ using namespace std;
 //can we assume all the files in files.dat will exist?
 //can we assume the txt files will not be empty?
 //can we assume files.dat will never be empty?
-//need to wory about going over size of int?
+//need to wory about going over size of int????????????????????????????
 
 
 // dont forget to check for mem leaks !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -53,35 +53,35 @@ int main(int argc, char **argv)
     if (rank == 0) {
     	cout << "\n\n\n\n" << endl;
     	//read in the filenames to be read
-//    	vector<string> txt_filenames = get_txt_filenames(FILENAMES_FILE_PATH);
-//    	cout << "txt_filenames: " << txt_filenames << endl;
-//
-//    	//read the chars from each file and add them all to one big vector
-//    	vector<char> master_char_vec = build_master_char_vec(txt_filenames);
-//    	cout << "just built mcv, mcv.size: " << master_char_vec.size() << endl;
-//
-//    	int globaldata_size = find_next_div_size(master_char_vec.size(), size);
-//    	cout << "globaldata_size: " << globaldata_size << endl;
-//
-//
-//    	// create and file globaldata, if globaldata is larger than master_char_vec, add 0's to the end to fill
-//        globaldata = new char[globaldata_size];
-//        for (int i = 0 ; i < globaldata_size ; i++)
-//        {
-//        	if (i < master_char_vec.size())
-//        		globaldata[i] = master_char_vec[i];
-//        	else
-//        		globaldata[i] = '0';
-////        	cout << i << ":  " << globaldata[i] << endl;
-//        }
+    	vector<string> txt_filenames = get_txt_filenames(FILENAMES_FILE_PATH);
+    	cout << "txt_filenames: " << txt_filenames << endl;
 
-    	globaldata = new char[10];
-    	string s = "abcdefghij";
-    	for (int i = 0 ; i < s.size() ; i++)
-    	{
-    		globaldata[i] = s[i];
-    	}
-    	globaldata_size = s.size();
+    	//read the chars from each file and add them all to one big vector
+    	vector<char> master_char_vec = build_master_char_vec(txt_filenames);
+    	cout << "just built mcv, mcv.size: " << master_char_vec.size() << endl;
+
+    	int globaldata_size = find_next_div_size(master_char_vec.size(), size);
+    	cout << "globaldata_size: " << globaldata_size << endl;
+
+
+    	// create and file globaldata, if globaldata is larger than master_char_vec, add 0's to the end to fill
+        globaldata = new char[globaldata_size];
+        for (int i = 0 ; i < globaldata_size ; i++)
+        {
+        	if (i < master_char_vec.size())
+        		globaldata[i] = master_char_vec[i];
+        	else
+        		globaldata[i] = '0';
+//        	cout << i << ":  " << globaldata[i] << endl;
+        }
+
+//    	globaldata = new char[10];
+//    	string s = "abcdefghij";
+//    	for (int i = 0 ; i < s.size() ; i++)
+//    	{
+//    		globaldata[i] = s[i];
+//    	}
+//    	globaldata_size = s.size();
 
 
 
@@ -120,13 +120,28 @@ int main(int argc, char **argv)
 ////    MPI_Gather(&localdata, 5, MPI_INT, globaldata, 5, MPI_INT, 0, MPI_COMM_WORLD);
 //
 //
+
+
+//    for (int i = 0 ; i < 26 ; i++)
+//    {
+//    	local_sum[i] = i;
+//    }
+//
 //    MPI_Reduce(&local_sum, &global_sum, 26, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 //
 //    if (rank == 0) {
 //        printf("Processor %d has data: ", rank);
-//        for (int i=0; i<size; i++)
-//            printf("%d ", globaldata[i]);
+////        for (int i=0; i<size; i++)
+////            printf("%d ", globaldata[i]);
 //        printf("\n");
+//
+//        cout << "global_sum:  [  ";
+//        for (int i = 0 ; i < 26 ; i++)
+//        {
+//        	cout << global_sum[i] << "  ";
+//        }
+//        cout << "  ]" << endl;
+//
 //    }
 
     if (rank == 0)
