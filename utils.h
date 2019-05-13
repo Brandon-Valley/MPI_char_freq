@@ -141,7 +141,6 @@ int read_int_from_txt_file(const string file_path)
 	{
 	    int_str_vec.push_back(item_name);
 	}
-//	cout << int_str_vec << endl;//```````````````````````````````````````````````````````````````````
 	nameFileout.close();
 
 	return stoi(int_str_vec[0]);
@@ -163,7 +162,6 @@ void sum_chars(int ch_count_a[26], char chars_to_count_a[], const int num_chars_
 			ch_count_a[ALPHABET.find(ch)] ++;
 		}
 
-//		ch_count_a[i] = i;
 	}
 }
 
