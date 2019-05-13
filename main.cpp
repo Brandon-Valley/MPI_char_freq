@@ -148,6 +148,9 @@ int main(int argc, char **argv)
 
     }
 
+    if (rank == 0)
+    	print_output(global_sum);
+
 
 //    if (rank == 0)
 	delete[] (globaldata);

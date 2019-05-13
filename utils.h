@@ -168,6 +168,16 @@ void sum_chars(int ch_count_a[26], char chars_to_count_a[], const int num_chars_
 }
 
 
+void print_output(int final_ch_count_a[26])
+{
+	cout << endl;
+	cout << "CHARACTER COUNT:" << endl;
+	for (int i = 0 ; i < 26 ; i++)
+	{
+		cout << ALPHABET[i] << ":  " << final_ch_count_a[i] << endl;
+	}
+}
+
 
 
 
