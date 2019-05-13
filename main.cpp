@@ -84,7 +84,14 @@ int main(int argc, char **argv)
 
 
     if (rank == 0)
-    	print_output(global_sum);
+    {
+    	cout << " " << endl;
+        cout << " " << endl;
+        cout << "MAKE SURE TO PUT YOUR INPUT TXT FILES IN A DATA FOLDER JUST LIKE IN THE EXAMPLE!" << endl;
+        cout << " " << endl;
+        print_output(global_sum);
+    }
+
 
 
 //    if (rank == 0)
