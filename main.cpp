@@ -35,6 +35,7 @@ int main(int argc, char **argv)
 //	cout << sizeof(a) / sizeof(*a) << endl;
 
 	int globaldata_size = 0;
+	int localdata_size = 0;
 	int *global_sum = new int[26];
 	int *local_sum = new int[26];
 
@@ -48,7 +49,7 @@ int main(int argc, char **argv)
 
     char *globaldata=NULL;
     char *localdata=NULL;
-    localdata =  new char[5];
+//    int globaldata_size = 0;
 
     if (rank == 0) {
     	cout << "\n\n\n\n" << endl;
@@ -60,7 +61,7 @@ int main(int argc, char **argv)
     	vector<char> master_char_vec = build_master_char_vec(txt_filenames);
     	cout << "just built mcv, mcv.size: " << master_char_vec.size() << endl;
 
-    	int globaldata_size = find_next_div_size(master_char_vec.size(), size);
+    	globaldata_size = find_next_div_size(master_char_vec.size(), size);
     	cout << "globaldata_size: " << globaldata_size << endl;
 
 
@@ -84,29 +85,28 @@ int main(int argc, char **argv)
 //    	globaldata_size = s.size();
 
 
+        localdata_size = globaldata_size / size;
 
-
-//        printf("Processor %d has all the data: ", rank);
         cout << "Processor " << rank << " has all the data" << endl;
-//        printf("Processor %d has data: ", rank);
-//        for (int i=0; i<size; i++)
-//            printf("%d ", globaldata[i]);
-//        printf("\n");
 
-//        cout << "real globadata size: " << sizeof(globaldata) << endl;
-
-        write_int_to_txt_file(globaldata_size, GLOBAL_DATA_SIZE_TXT_FILE_PATH);
+//        write_int_to_txt_file(globaldata_size, GLOBAL_DATA_SIZE_TXT_FILE_PATH);
     }
-    int g_data_size = read_int_from_txt_file(GLOBAL_DATA_SIZE_TXT_FILE_PATH);
 
-//    cout << "outside if:  globaldata_size: " << globaldata_size << endl;
+	MPI_Bcast(&localdata_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    int num_chars_per_mpi_inst = g_data_size / size;
-    cout << "num_chars_per_mpi_inst:  " << num_chars_per_mpi_inst << endl;
+//    int g_data_size = read_int_from_txt_file(GLOBAL_DATA_SIZE_TXT_FILE_PATH);
+//
+////    cout << "outside if:  globaldata_size: " << globaldata_size << endl;
+//
+//    int num_chars_per_mpi_inst = g_data_size / size;
+
+    localdata =  new char[localdata_size];
+
+    cout << "localdata_size:  " << localdata_size<< endl;
 
     cout << "about to do scatter" << endl;
 
-    MPI_Scatter(globaldata, 5, MPI_CHAR, localdata, 5, MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Scatter(globaldata, localdata_size, MPI_CHAR, localdata,localdata_size, MPI_CHAR, 0, MPI_COMM_WORLD);
 
 //    printf("Processor %d has data %d\n", rank, localdata);
 
@@ -121,7 +121,7 @@ int main(int argc, char **argv)
 //
 //
 
-    sum_chars(local_sum, localdata, 5);
+    sum_chars(local_sum, localdata, localdata_size);
 
 
 	cout << "local_sum:  [ ";
@@ -131,25 +131,30 @@ int main(int argc, char **argv)
 	}
 	cout << " ]" << endl;
 
-    MPI_Reduce(&local_sum, &global_sum, 26, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(local_sum, global_sum, 26, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
-    if (rank == 0) {
-//        printf("Processor %d has data: ", rank);
-////        for (int i=0; i<size; i++)
-////            printf("%d ", globaldata[i]);
-//        printf("\n");
 
-//        cout << "global_sum:  [  ";
-//        for (int i = 0 ; i < 26 ; i++)
-//        {
-//        	cout << global_sum[i] << "  ";
-//        }
-//        cout << "  ]" << endl;
+
+    if (rank == 0)
+    {
+
+
+        cout << "global_sum:  [  ";
+        for (int i = 0 ; i < 26 ; i++)
+        {
+        	cout << global_sum[i] << "  ";
+        }
+        cout << "  ]" << endl;
 
     }
 
-    if (rank == 0)
-        delete(globaldata);
+
+//    if (rank == 0)
+	delete[] (globaldata);
+    delete[] (localdata);
+    delete[] (global_sum);
+    delete[] (local_sum);
+
 
     MPI_Finalize();
     return 0;
